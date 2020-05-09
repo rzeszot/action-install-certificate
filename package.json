@@ -1,0 +1,27 @@
+{
+  "name": "action-copy-provisioning-profile",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build src/main.js && mv dist/index.js dist/main.js; ncc build src/clean.js && mv dist/index.js dist/clean.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rzeszot/appstore-copy-provisioning-profile.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rzeszot/appstore-copy-provisioning-profile/issues"
+  },
+  "homepage": "https://github.com/rzeszot/appstore-copy-provisioning-profile#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/exec": "^1.0.4",
+    "@actions/github": "^2.2.0",
+    "fs-extra": "^9.0.0",
+    "tmp": "^0.2.1"
+  }
+}
