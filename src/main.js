@@ -4,14 +4,16 @@ const tmp = require('tmp');
 const fs = require('fs-extra');
 
 
-async function keychain_import(p12_content, p12_password, keychain_name) {
-  const buffer = Buffer.from(p12_content, 'base64')
-  const tempFile = tmp.fileSync().name
-  fs.writeFileSync(tempFile, buffer)
+async function keychain_import(p12content, p12password) {
+  const buffer = Buffer.from(p12content, 'base64')
+  const tempFile = tmp.fileSync()
+  const p12Filepath = tempFile.name
 
-  await exec.exec('security', ['import', tempFile, '-t', 'agg', '-k', keychain_name, '-P', p12_password, '-A']);
+  fs.writeFileSync(p12Filepath, buffer)
 
-  fs.unlinkSync(tempFile.name)
+  await exec.exec('security', ['import', p12Filepath, '-f', 'pkcs12', '-k', "build.keychain", '-P', p12password, '-A']);
+
+  fs.unlinkSync(p12Filepath)
 }
 
 
@@ -30,7 +32,7 @@ async function run() {
     await exec.exec('security', ['create-keychain', '-p', '""', keychain]);
 
     core.debug(`import p12`);
-    keychain_import(p12content, p12password, keychain);
+    keychain_import(p12content, p12password);
 
     core.debug(`xxx`);
     await exec.exec('security', ['default-keychain', '-s', keychain]);
