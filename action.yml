@@ -1,13 +1,24 @@
-name: Install Certficicate
+name: 'App Store - install Certificate'
 description: 'TODO'
 inputs:
-  p12-base64:
+  certificate_content:
     description: 'The certificates in a PKCS12 file encoded as a base64 string.'
     required: true
-  p12-password:
+  certificate_password:
     description: 'The password used to import the PKCS12 file.'
     required: true
 runs:
-  using: 'node12'
-  main: 'dist/main.js'
-  post: 'dist/clean.js'
+  using: 'composite'
+  steps:
+    - shell: sh
+      run: |
+        security create-keychain -p "" build.keychain
+
+        tmp=`mktemp`
+        base64 -d -o "$tmp" <<< "${{ inputs.CERTIFICATE_CONTENT }}"
+        security import "$tmp" -f pkcs12 -k build.keychain -P "${{ inputs.certificate_password }}" -A
+        rm "$tmp"
+
+        security default-keychain -s build.keychain
+        security unlock-keychain -p "" build.keychain
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" build.keychain

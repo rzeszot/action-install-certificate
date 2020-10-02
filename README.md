@@ -1,1 +1,1 @@
-# action-install-certificate
+# GitHub Actions: App Store - install Certificate
