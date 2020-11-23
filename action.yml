@@ -15,7 +15,7 @@ runs:
         security create-keychain -p "" build.keychain
 
         tmp=`mktemp`
-        base64 -d -o "$tmp" <<< "${{ inputs.CERTIFICATE_CONTENT }}"
+        base64 -d -o "$tmp" <<< "${{ inputs.certificate_content }}"
         security import "$tmp" -f pkcs12 -k build.keychain -P "${{ inputs.certificate_password }}" -A
         rm "$tmp"
 
